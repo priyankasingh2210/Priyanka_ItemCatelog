@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	<body>
+		<h1> New Item </h1>
+		<form action="{{url_for('newItem', category_id=category_id)}}" method = 'POST'>
+			<p>Name:</p>
+			<input type='text' size='30' name='name'>
+			<p>Description:</p>
+			<input type = 'text' size='2500' name = 'description' placeholder = '{{item.description}}'>
+			<input type='submit' value='Create Item'>
+		</form>
+	</body>
+</html>
