@@ -3,14 +3,19 @@
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 	</head>
 	<body>
-		<form action= "{{url_for('editItem', category_id=category_id, item_id=item.id}}" method = 'POST'>
-			<p>Name:</p>
-			<input type = 'text' size='250' name = 'name' placeholder = '{{item.name}}'>
-			<p>Description:</p>
-			<input type = 'text' size='2500' name = 'description' placeholder = '{{item.description}}'>
-			<input type='submit' value='Edit Item'>
-		</form>
-	<a href= "{{url_for('itemCatelog', category_id = item.category_id)}}"> Cancel </a>
+		<h1> Edit Item </h1>
+		<div class = 'pane'>
+			<form action= "{{url_for('editItem', category_id=category_id, item_id=item.id}}" method = 'POST'>
+				<dl>
+					<dt>Name:</dt>
+					<dd><input type = 'text' size='250' name = 'name' placeholder = '{{item.name}}'></dd>
+					<dt>Description:</dt>
+					<dd><textarea name = 'description' rows='5' cols='40' required></textarea></dd>
+				</dl>
+				<input type='submit' value='Edit Item'>
+			</form>
+			<a href= "{{url_for('itemCatelog', category_id = item.category_id)}}"> Cancel </a>
+		</div>
 	</body>
 </html>
 

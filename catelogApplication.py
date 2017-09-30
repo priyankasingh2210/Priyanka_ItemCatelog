@@ -29,7 +29,7 @@ def itemJSON(category_id, item_id):
     return jsonify(Items=Items.serialize)
 
 
-#@app.route('/')
+@app.route('/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
