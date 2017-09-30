@@ -5,9 +5,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Categories, Items
 
-from sqlalchemy import create_engine, asc
-from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
 from flask import session as login_session
 import random
 import string
@@ -156,6 +153,12 @@ def gdisconnect():
         return response
 
 
+# #Show all restaurants
+# @app.route('/')
+# @app.route('/categories/')
+# def showRestaurants():
+#   categories = session.query(Categories).order_by(asc(category.name))
+#   return render_template('item.html')
 
 @app.route('/categories/<int:category_id>/item/JSON')
 def itemCatelogJSON(category_id):
@@ -171,7 +174,6 @@ def itemJSON(category_id, item_id):
     item = session.query(Items).filter_by(id=menu_id).one()
     return jsonify(Items=Items.serialize)
 
-
 #@app.route('/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
@@ -184,7 +186,7 @@ def itemCatelog(category_id):
 @app.route('/categories/<int:category_id>/new/', methods=['GET', 'POST'])
 def newItem(category_id):
     if 'username' not in login_session:
-    return redirect('/login')
+        return redirect('/login')
     if request.method == 'POST':
         newItem = Items(name=request.form['name'], description=request.form['description'], category_id=category_id)
         session.add(newItem)
@@ -199,7 +201,7 @@ def newItem(category_id):
 @app.route('/categories/<int:category_id>/<int:item_id>/edit/', methods=['GET', 'POST'])
 def editItem(category_id, item_id):
     if 'username' not in login_session:
-    return redirect('/login')
+        return redirect('/login')
     editItem = session.query(Items).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['name']:
@@ -219,7 +221,7 @@ def editItem(category_id, item_id):
 @app.route('/categories/<int:category_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
     if 'username' not in login_session:
-    return redirect('/login')
+        return redirect('/login')
     deleteItem = session.query(Items).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(deleteItem)
