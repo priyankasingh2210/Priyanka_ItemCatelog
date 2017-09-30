@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -63,8 +65,7 @@ session.add(item1)
 session.commit()
 
 
-item2 = Items(name='''Thought Catelog", description="An online magazine which provide answers for any life question
-              such as relationship, self-confidence from naive and as well as experienced writers.''',
+item2 = Items(name="Thought Catelog", description="An online magazine which provide answers for any life question such as relationship, self-confidence from naive and as well as experienced writers.",
                      category=category2)
 
 session.add(item2)
@@ -138,4 +139,4 @@ item5 = Items(name="Trumpet", description="Rashmi Bansal.",
 session.add(item5)
 session.commit()
 
-print "added items!"
+print("added items!")

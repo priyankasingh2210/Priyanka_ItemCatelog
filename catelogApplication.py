@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -55,6 +57,8 @@ def editItem(category_id, item_id):
     if request.method == 'POST':
         if request.form['name']:
             editItem.name = request.form['name']
+        if request.form['description']:
+            editItem.name = request.form['description']
         session.add(editItem)
         session.commit()
         return redirect(url_for('itemCatelog', category_id=category_id))
