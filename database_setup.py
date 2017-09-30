@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -27,7 +29,7 @@ class Items(Base):
     id = Column(Integer,primary_key=True)
     name = Column(String(250), nullable=False)
     description = Column(String(2500), nullable=False)
-    category_id = Column(Integer, ForeignKey('Categories.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'))
     category = relationship(Categories)
 
     @property
