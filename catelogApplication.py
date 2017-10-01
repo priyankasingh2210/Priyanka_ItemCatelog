@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Categories, Items
@@ -147,7 +147,8 @@ def gdisconnect():
         del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        return redirect('/')
+
     else:
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
@@ -171,6 +172,8 @@ def itemJSON(category_id, item_id):
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    if 'username' in login_session:
+        flash("Hi %s !" % login_session['username'])
     categories = session.query(Categories).order_by(Categories.name)
     return render_template('categories.html', categories=categories)
 

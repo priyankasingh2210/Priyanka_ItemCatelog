@@ -4,10 +4,20 @@
 			<span class="glyphicon glyphicon-home" aria-hidden="true">Show All Categories</span>
 		</a>
 	</div>
-	<div class="col-md-6 text-right" id="loginclass">
-					<p> <a href="/login" > Login </a>
+	<div class="col-md-6" align="text-right">
+			<div class = 'flash' align="right" >
 
-					 </p>
-		
-	</div>
+			    {% with messages = get_flashed_messages() %}
+	      			{% if messages %}
+	      			{% for message in messages %}
+	            		<p> <h3> <strong> {{ message }} </strong>  <a href="/gdisconnect" >   Logout ? </a> </h3> </p>
+	            		   {% endfor %}
+	          		{% else %}
+	          			<p id="loginText"> <a href="/login" > Login </a> </p>
+	        		{% endif %}
+	    		{% endwith %}
+
+	    	</div>
+		</div>
+	
 </div>
