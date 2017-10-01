@@ -41,11 +41,11 @@ strong {
     line-height: 24px;
  }
 
- a {
+a {
     font-size: 14px;
-    color: #0093B9;
+    color: #9FB80A;
     line-height: 17px;
- }
+}
 h2 {
     font-family: 'georgia', serif;
     margin: 0;
@@ -63,12 +63,6 @@ p,
 dd,
 dt {
     color: #cccccc;
-}
-
-a {
-    text-decoration: none;
-    color: #9FB80A;
-    font-size: .75em;
 }
 
 .padding-top {
