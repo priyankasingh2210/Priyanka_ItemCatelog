@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Categories, Items
@@ -31,11 +31,13 @@ session = DBSession()
 # Create anti-forgery state token
 @app.route('/login')
 def showLogin():
+    if 'username' in login_session:
+        return redirect('/')
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
+    return render_template('loginpage.html', STATE=state)
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -117,7 +119,6 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
     print("done!")
     return output
 
@@ -146,7 +147,8 @@ def gdisconnect():
         del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        return redirect('/')
+
     else:
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
@@ -170,6 +172,8 @@ def itemJSON(category_id, item_id):
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    if 'username' in login_session:
+        flash("Hi %s !" % login_session['username'])
     categories = session.query(Categories).order_by(Categories.name)
     return render_template('categories.html', categories=categories)
 
@@ -237,5 +241,6 @@ def deleteItem(category_id, item_id):
         return render_template('deleteItem.html', item=deleteItem)
 
 if __name__ == '__main__':
+    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
