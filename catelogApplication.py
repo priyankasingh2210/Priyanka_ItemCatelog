@@ -83,7 +83,7 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print "Token's client ID does not match app's."
+        print("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -118,7 +118,7 @@ def gconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
+    print("done!")
     return output
 
 
@@ -126,18 +126,18 @@ def gconnect():
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
-        print 'Access Token is None'
+        print("Access Token is None")
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    print 'In gdisconnect access token is %s', access_token
-    print 'User name is: '
-    print login_session['username']
+    print("In gdisconnect access token is %s", access_token)
+    print("User name is: ")
+    print(login_session['username'])
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
+    print("result is")
+    print(result)
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -153,12 +153,13 @@ def gdisconnect():
         return response
 
 
-# #Show all restaurants
-# @app.route('/')
-# @app.route('/categories/')
-# def showRestaurants():
-#   categories = session.query(Categories).order_by(asc(category.name))
-#   return render_template('item.html')
+# #Show all categories
+@app.route('/')
+@app.route('/categories/')
+def showCategories():
+    categories = session.query(Categories).order_by(Categories.name)
+    #items = session.query(Items).filter_by(category_id=category_id)
+    return render_template('categories.html', categories=categories)
 
 @app.route('/categories/<int:category_id>/item/JSON')
 def itemCatelogJSON(category_id):
@@ -174,7 +175,7 @@ def itemJSON(category_id, item_id):
     item = session.query(Items).filter_by(id=menu_id).one()
     return jsonify(Items=Items.serialize)
 
-@app.route('/')
+#@app.route('/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
