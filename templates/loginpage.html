@@ -4,34 +4,50 @@
 
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-  </script>
 
+  </script>
+  <link rel="stylesheet" type="text/css" href="static/styleslogin.css">
+
+<script  src="js/index.js"></script>
 <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
-
 </head>
-
 
 <body>  
 
-
 <!-- GOOGLE PLUS SIGN IN BUTTON-->
 
-          
-          <div id="signInButton">
-          <span class="g-signin"
-            data-scope="openid email"
-            data-clientid="3049533096-h6sm96qg2okn0hs9f5hccpr0udeojk3o.apps.googleusercontent.com"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-          </span>
-        </div>
 
+<div class="login-page">
+  <div class="form">
+    <!-- <form class="register-form">
+      <input type="text" placeholder="name"/>
+      <input type="password" placeholder="password"/>
+      <input type="text" placeholder="email address"/>
+      <button>create</button>
+      <p class="message">Already registered? <a href="#">Sign In</a></p>
+    </form>
+    <form class="login-form">
+      <input type="text" placeholder="username"/>
+      <input type="password" placeholder="password"/>
+      <button>login</button>
+      <p class="message">Not registered? <a href="#">Create an account</a></p>
+    </form> -->
+    <div id="signInButton" >
+      <span class="g-signin"
+        data-scope="openid email"
+        data-clientid="657895298325-s7grgbae6iov7jfvjdo5lm12v1ueu54m.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback"
+        data-approvalprompt="force">
+      </span>
+    </div>
+  </div>
+</div>
 
 
 <script>
@@ -51,8 +67,8 @@ function signInCallback(authResult) {
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
-          window.location.href = "/restaurant";
-         }, 4000);
+          window.location.href = "/categories";
+         }, 3000);
           
       } else if (authResult['error']) {
     console.log('There was an error: ' + authResult['error']);
