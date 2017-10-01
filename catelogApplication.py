@@ -187,6 +187,8 @@ def showCategories():
 @app.route('/categories/<int:category_id>/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
+    if 'username' in login_session:
+        flash("Hi %s !" % login_session['username'])
     category = session.query(Categories).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category_id).all()
     return render_template('item.html', category=category, items=items, category_id=category_id)
@@ -197,6 +199,8 @@ def itemCatelog(category_id):
 def newItem(category_id):
     if 'username' not in login_session:
         return redirect('/login')
+    else:
+        flash("Hi %s !" % login_session['username'])
     if request.method == 'POST':
         newItem = Items(name=request.form['name'], description=request.form['description'], category_id=category_id)
         session.add(newItem)
@@ -212,6 +216,8 @@ def newItem(category_id):
 def editItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
+    else:
+        flash("Hi %s !" % login_session['username'])
     editItem = session.query(Items).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['name']:
@@ -232,6 +238,8 @@ def editItem(category_id, item_id):
 def deleteItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
+    else:
+        flash("Hi %s !" % login_session['username'])
     deleteItem = session.query(Items).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(deleteItem)
