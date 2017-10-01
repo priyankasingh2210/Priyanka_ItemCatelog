@@ -152,15 +152,6 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-
-# #Show all categories
-@app.route('/')
-@app.route('/categories/')
-def showCategories():
-    categories = session.query(Categories).order_by(Categories.name)
-    #items = session.query(Items).filter_by(category_id=category_id)
-    return render_template('categories.html', categories=categories)
-
 @app.route('/categories/<int:category_id>/item/JSON')
 def itemCatelogJSON(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
@@ -175,11 +166,18 @@ def itemJSON(category_id, item_id):
     item = session.query(Items).filter_by(id=menu_id).one()
     return jsonify(Items=Items.serialize)
 
-#@app.route('/')
+# Show all categories
+@app.route('/')
+@app.route('/categories/')
+def showCategories():
+    categories = session.query(Categories).order_by(Categories.name)
+    return render_template('categories.html', categories=categories)
+
+@app.route('/categories/<int:category_id>/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
-    items = session.query(Items).filter_by(category_id=category_id)
+    items = session.query(Items).filter_by(category_id=category_id).all()
     return render_template('item.html', category=category, items=items, category_id=category_id)
 
 # Task 1: Create route for newItem function here
