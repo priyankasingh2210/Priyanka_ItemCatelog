@@ -173,6 +173,13 @@ def showCategories():
     categories = session.query(Categories).order_by(Categories.name)
     return render_template('categories.html', categories=categories)
 
+#@app.route('/categories/<int:category_id>/')
+#@app.route('/categories/<int:category_id>/item')
+#def showItem(category_id):
+    #category = session.query(Categories).filter_by(id=category_id).one()
+    #items = session.query(Items).filter_by(category_id=category_id).all()
+    #return render_template('showitem.html', category=category, items=items, category_id=category_id)
+
 @app.route('/categories/<int:category_id>/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
