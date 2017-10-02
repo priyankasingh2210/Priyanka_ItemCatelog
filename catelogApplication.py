@@ -290,8 +290,7 @@ def deleteItem(category_id, item_id):
     if deleteItem:
         if user_id == deleteItem.user_id or user_id == admin_id:
             if request.method == 'POST':
-                category = session.query(Categories)
-                .filter_by(id=category_id).one()
+                category = session.query(Categories).filter_by(id=category_id).one()  # noqa
                 session.delete(deleteItem)
                 session.commit()
                 return redirect(url_for('itemCatelog', category_id=category_id))  # noqa
