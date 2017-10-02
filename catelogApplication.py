@@ -213,15 +213,17 @@ def showCategories():
 @app.route('/categories/<int:category_id>/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
-    category = session.query(Categories).filter_by(id=category_id).one()
-    items = session.query(Items).filter_by(category_id=category_id).all()
-    if 'username' in login_session:
-        flash('Hi %s !' % login_session['username'])
-        return render_template('item.html', category=category,
-                               items=items, category_id=category_id)
-    else:
-        return render_template('showitem.html', category=category,
-                               items=items, category_id=category_id)
+    category = session.query(Categories).filter_by(id=category_id).one_or_none()  # noqa
+    if category:
+        items = session.query(Items).filter_by(category_id=category_id).all()  # noqa
+        if 'username' in login_session:
+            flash('Hi %s !' % login_session['username'])
+            return render_template('item.html', category=category,
+                                   items=items, category_id=category_id)
+        else:
+            return render_template('showitem.html', category=category,
+                                   items=items, category_id=category_id)
+    return redirect('/')
 
 
 # Task 1: Create route for newItem function here
@@ -231,16 +233,18 @@ def newItem(category_id):
         return redirect('/login')
     else:
         flash("Hi %s !" % login_session['username'])
-    category = session.query(Categories).filter_by(id=category_id).one()
-    if request.method == 'POST':
-        newItem = Items(name=request.form['name'],
-                        description=request.form['description'],
-                        category_id=category_id, user_id=check_user().id)
-        session.add(newItem)
-        session.commit()
-        return redirect(url_for('itemCatelog', category_id=category_id))
-    else:
-        return render_template('newItem.html', category_id=category_id)
+    category = session.query(Categories).filter_by(id=category_id).one_or_none()  # noqa
+    if category:
+        if request.method == 'POST':
+            newItem = Items(name=request.form['name'],
+                            description=request.form['description'],
+                            category_id=category_id, user_id=check_user().id)
+            session.add(newItem)
+            session.commit()
+            return redirect(url_for('itemCatelog', category_id=category_id))
+        else:
+            return render_template('newItem.html', category_id=category_id)
+    return redirect('/')
 
 
 # Task 2: Create route for editItem function here
