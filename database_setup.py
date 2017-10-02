@@ -42,6 +42,8 @@ class Items(Base):
 
 # insert at the end of file
 
-engine = create_engine('sqlite:///itemCatelog.db')
+#engine = create_engine('sqlite:///itemCatelog.db')
+engine = create_engine('sqlite:////var/www/db/itemCatelog.db?check_same_thread=False')
+
 
 Base.metadata.create_all(engine)
