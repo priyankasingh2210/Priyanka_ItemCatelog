@@ -276,29 +276,28 @@ def editItem(category_id, item_id):
         return redirect('/login')
     else:
         flash('Hi %s !' % login_session['username'])
-    editItem = session.query(Items).filter_by(id=item_id).one()
-    category = session.query(Categories).filter_by(id=category_id).one()
+    editItem = session.query(Items).filter_by(id=item_id).one_or_none()
     user_id = check_user().id
     if check_admin():
         admin_id = check_admin().id
     else:
         admin_id = -1;
-    if user_id == editItem.user_id or user_id == admin_id:
-        if request.method == 'POST':
-            if request.form['name']:
-                editItem.name = request.form['name']
-            if request.form['description']:
-                editItem.description = request.form['description']
-            session.add(editItem)
-            session.commit()
-            return redirect(url_for('itemCatelog', category_id=category_id))
-        else:
-            if user_id == editItem.user_id or user_id == admin_id:
-                return render_template('editItem.html',
-                                   category_id=category_id,
-                                   item_id=item_id, item=editItem)
-    else:
-        return redirect('/')
+    if editItem:
+        if user_id == editItem.user_id or user_id == admin_id:
+            if request.method == 'POST':
+                if request.form['name']:
+                    editItem.name = request.form['name']
+                if request.form['description']:
+                    editItem.description = request.form['description']
+                session.add(editItem)
+                session.commit()
+                return redirect(url_for('itemCatelog', category_id=category_id))
+            else:
+                if user_id == editItem.user_id or user_id == admin_id:
+                    return render_template('editItem.html',
+                                       category_id=category_id,
+                                       item_id=item_id, item=editItem)
+    return redirect('/')
         
 
 
