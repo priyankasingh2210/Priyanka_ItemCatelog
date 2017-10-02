@@ -318,17 +318,17 @@ def deleteItem(category_id, item_id):
         admin_id = check_admin().id
     else:
         admin_id = -1;
-    deleteItem = session.query(Items).filter_by(id=item_id).one() 
-    if user_id == deleteItem.user_id or user_id == admin_id:
-        if request.method == 'POST':
-            category = session.query(Categories).filter_by(id=category_id).one()
-            session.delete(deleteItem)
-            session.commit()
-            return redirect(url_for('itemCatelog', category_id=category_id))
-        else:
-            return render_template('deleteItem.html', item=deleteItem)
-    else:
-        return redirect('/')
+    deleteItem = session.query(Items).filter_by(id=item_id).one_or_none() 
+    if deleteItem :
+        if user_id == deleteItem.user_id or user_id == admin_id:
+            if request.method == 'POST':
+                category = session.query(Categories).filter_by(id=category_id).one()
+                session.delete(deleteItem)
+                session.commit()
+                return redirect(url_for('itemCatelog', category_id=category_id))
+            else:
+                return render_template('deleteItem.html', item=deleteItem)
+    return redirect('/')
 
 
 if __name__ == '__main__':
