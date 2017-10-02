@@ -186,7 +186,7 @@ def gdisconnect():
         return response
 
 
-@app.route('/categories/<int:category_id>/item/JSON')
+@app.route('/categories/<int:category_id>/items/JSON')
 def itemCatelogJSON(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category_id).all()
@@ -194,10 +194,10 @@ def itemCatelogJSON(category_id):
 
 
 # ADD JSON ENDPOINT HERE
-@app.route('/categories/<int:category_id>/item/JSON')
+@app.route('/categories/<int:category_id>/item/<int:item_id>/JSON')
 def itemJSON(category_id, item_id):
-    item = session.query(Items).filter_by(id=menu_id).one()
-    return jsonify(Items=Items.serialize)
+    item = session.query(Items).filter_by(id=item_id).one()
+    return jsonify(Item=item.serialize)
 
 
 # Show all categories
