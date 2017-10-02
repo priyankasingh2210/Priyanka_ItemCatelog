@@ -20,12 +20,12 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
-# Dummy Users
-user1 =User(name="Priyanka")
+# Create dummy user
+user1 = User(name="admin", email="priyanksingh.ps.90@gmail.com")
 session.add(user1)
 session.commit()
 
-user2 =User(name="Neeraj")
+user2 = User(name="Neeraj", email="neeraj2raj@gmail.com")
 session.add(user2)
 session.commit()
 
@@ -61,13 +61,13 @@ category2 = Categories(name="Blogs")
 session.add(category2)
 session.commit()
 
-item1 = Items(name="ScoopWhoop", description="A blog which contain information in different section such as Humour, Travel, News etc.", category=category2, user=user1)  # noqa
+item1 = Items(name="ScoopWhoop", description="A blog which contain information in different section such as Humour, Travel, News etc.", category=category2, user=user2)  # noqa
 
 session.add(item1)
 session.commit()
 
 
-item2 = Items(name="Thought Catelog", description="An online magazine which provide answers for any life question such as relationship, self-confidence from naive and as well as experienced writers.", category=category2, user=user1)  # noqa
+item2 = Items(name="Thought Catelog", description="An online magazine which provide answers for any life question such as relationship, self-confidence from naive and as well as experienced writers.", category=category2, user=user2)  # noqa
 
 session.add(item2)
 session.commit()

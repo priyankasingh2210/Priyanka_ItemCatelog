@@ -29,11 +29,10 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-
 def createUser():
-    name = login_session['name']
+    name = login_session['username']
     email = login_session['email']
-    url = login_session['img']
+    url = login_session['picture']
     provider = login_session['provider']
     newUser = User(name=name, email=email, image=url, provider=provider)
     session.add(newUser)
@@ -50,7 +49,7 @@ def check_user():
 
 def check_admin():
     return session.query(User).filter_by(
-        email='sagar.choudhary96@gmail.com').one_or_none()
+        email='priyankasingh.ps.90@gmail.com').one_or_none()
 
 
 
@@ -149,13 +148,32 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    login_session['provider'] = 'google'
 
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
     print("done!")
+    if not check_user():
+        createUser()
     return output
+
+
+
+# logout user
+@app.route('/logout', methods=['post'])
+def logout():
+
+    # Disconnect based on provider
+
+    if login_session.get('provider') == 'google':
+        return gdisconnect()
+    else:
+        response = make_response(json.dumps({'state': 'notConnected'}),
+                                 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 
 @app.route('/gdisconnect')
@@ -241,7 +259,7 @@ def newItem(category_id):
     if request.method == 'POST':
         newItem = Items(name=request.form['name'],
                         description=request.form['description'],
-                        category_id=category_id)
+                        category_id=category_id, user_id=check_user().id)
         session.add(newItem)
         session.commit()
         return redirect(url_for('itemCatelog', category_id=category_id))
@@ -260,18 +278,29 @@ def editItem(category_id, item_id):
         flash('Hi %s !' % login_session['username'])
     editItem = session.query(Items).filter_by(id=item_id).one()
     category = session.query(Categories).filter_by(id=category_id).one()
-    if request.method == 'POST':
-        if request.form['name']:
-            editItem.name = request.form['name']
-        if request.form['description']:
-            editItem.description = request.form['description']
-        session.add(editItem)
-        session.commit()
-        return redirect(url_for('itemCatelog', category_id=category_id))
+    user_id = check_user().id
+    if check_admin():
+        admin_id = check_admin().id
     else:
-        return render_template('editItem.html',
-                               category_id=category_id,
-                               item_id=item_id, item=editItem)
+        admin_id = -1;
+    if user_id == editItem.user_id or user_id == admin_id:
+        if request.method == 'POST':
+            if request.form['name']:
+                editItem.name = request.form['name']
+            if request.form['description']:
+                editItem.description = request.form['description']
+            session.add(editItem)
+            session.commit()
+            return redirect(url_for('itemCatelog', category_id=category_id))
+        else:
+            if user_id == editItem.user_id or user_id == admin_id:
+                return render_template('editItem.html',
+                                   category_id=category_id,
+                                   item_id=item_id, item=editItem)
+    else:
+        return redirect('/')
+        
+
 
 
 # Task 3: Create a route for deleteItem function here
@@ -283,16 +312,26 @@ def deleteItem(category_id, item_id):
         return redirect('/login')
     else:
         flash('Hi %s !' % login_session['username'])
-    deleteItem = session.query(Items).filter_by(id=item_id).one()
-    category = session.query(Categories).filter_by(id=category_id).one()
-    if request.method == 'POST':
-        session.delete(deleteItem)
-        session.commit()
-        return redirect(url_for('itemCatelog', category_id=category_id))
+    
+    user_id = check_user().id
+    if check_admin():
+        admin_id = check_admin().id
     else:
-        return render_template('deleteItem.html', item=deleteItem)
+        admin_id = -1;
+    deleteItem = session.query(Items).filter_by(id=item_id).one() 
+    if user_id == deleteItem.user_id or user_id == admin_id:
+        if request.method == 'POST':
+            category = session.query(Categories).filter_by(id=category_id).one()
+            session.delete(deleteItem)
+            session.commit()
+            return redirect(url_for('itemCatelog', category_id=category_id))
+        else:
+            return render_template('deleteItem.html', item=deleteItem)
+    else:
+        return redirect('/')
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    # app.debug = True
+    app.debug = True
     app.run(host='0.0.0.0', port=5000)
