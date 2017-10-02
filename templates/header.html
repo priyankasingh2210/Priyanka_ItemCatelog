@@ -9,9 +9,9 @@
 
 			    {% with messages = get_flashed_messages() %}
 	      			{% if messages %}
-	      			{% for message in messages %}
-	            		<p> <h3> <strong> {{ message }} </strong>  <a href="/gdisconnect" >   Logout ? </a> </h3> </p>
-	            		   {% endfor %}
+	      			<p> <h3> <strong> {{ messages[0] }} </strong>  <a href="/gdisconnect" >   Logout ? </a> </h3> </p>
+		      			
+
 	          		{% else %}
 	          			<p id="loginText"> <a href="/login" > Login </a> </p>
 	        		{% endif %}
