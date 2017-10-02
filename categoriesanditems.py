@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -27,28 +27,23 @@ category1 = Categories(name="Fashion")
 session.add(category1)
 session.commit()
 
-item1 = Items(name="Lakme EyeLiner", description="Blck Smooth Slim Fit TIP Eyeliner.",
-                     category=category1)
+item1 = Items(name="Lakme EyeLiner", description="Blck Smooth Slim Fit TIP Eyeliner.", category=category1)  # noqa
 session.add(item1)
 session.commit()
 
-item2 = Items(name="Lakme Kajal", description="Ultimate Kajal dgeproof, super long wear, moisturising ceramides.",
-                     category=category1)
+item2 = Items(name="Lakme Kajal", description="Ultimate Kajal dgeproof, super long wear, moisturising ceramides.", category=category1)  # noqa
 session.add(item2)
 session.commit()
 
-item3 = Items(name="L'oreal Paris Cocealer", description="Good blended concealer according to one's skin tone.",
-                     category=category1)
+item3 = Items(name="L'oreal Paris Cocealer", description="Good blended concealer according to one's skin tone.", category=category1)  # noqa
 session.add(item3)
 session.commit()
 
-item4 = Items(name="Lakme Lipstic", description="A longwearing matte lipstick that gives you Hi-Definition and intense color in one stroke.",
-                     category=category1)
+item4 = Items(name="Lakme Lipstic", description="A longwearing matte lipstick that gives you Hi-Definition and intense color in one stroke.", category=category1)  # noqa
 session.add(item4)
 session.commit()
 
-item5 = Items(name="Lakme Toner", description="Removes impurities, refreshes skin, tightens pores.",
-                     category=category1)
+item5 = Items(name="Lakme Toner", description="Removes impurities, refreshes skin, tightens pores.", category=category1)  # noqa
 session.add(item5)
 session.commit()
 
@@ -58,15 +53,13 @@ category2 = Categories(name="Blogs")
 session.add(category2)
 session.commit()
 
-item1 = Items(name="ScoopWhoop", description="A blog which contain information in different section such as Humour, Travel, News etc.",
-                     category=category2)
+item1 = Items(name="ScoopWhoop", description="A blog which contain information in different section such as Humour, Travel, News etc.", category=category2)  # noqa
 
 session.add(item1)
 session.commit()
 
 
-item2 = Items(name="Thought Catelog", description="An online magazine which provide answers for any life question such as relationship, self-confidence from naive and as well as experienced writers.",
-                     category=category2)
+item2 = Items(name="Thought Catelog", description="An online magazine which provide answers for any life question such as relationship, self-confidence from naive and as well as experienced writers.", category=category2)  # noqa
 
 session.add(item2)
 session.commit()
@@ -77,31 +70,23 @@ category3 = Categories(name="Books")
 session.add(category3)
 session.commit()
 
-item1 = Items(name="Alchemist", description="Paulo Coelho.",
-                     category=category3)
-
+item1 = Items(name="Alchemist", description="Paulo Coelho.", category=category3)   # noqa
 session.add(item1)
 session.commit()
 
-
-item2 = Items(name="Life is what you make it", description="Preeti Shenoy.",
-                     category=category3)
-
+item2 = Items(name="Life is what you make it", description="Preeti Shenoy.", category=category3)  # noqa
 session.add(item2)
 session.commit()
 
-item3 = Items(name="Lean In", description="Sheryl Sandberg.",
-                     category=category3)
+item3 = Items(name="Lean In", description="Sheryl Sandberg.", category=category3)  # noqa
 session.add(item3)
 session.commit()
 
-item4 = Items(name="The Low Land", description="Jhumpa Lehri.",
-                     category=category3)
+item4 = Items(name="The Low Land", description="Jhumpa Lehri.", category=category3)  # noqa
 session.add(item4)
 session.commit()
 
-item5 = Items(name="Stay Foolish Stay Hungry", description="Rashmi Bansal.",
-                     category=category3)
+item5 = Items(name="Stay Foolish Stay Hungry", description="Rashmi Bansal.", category=category3)  # noqa
 session.add(item5)
 session.commit()
 
@@ -111,31 +96,24 @@ category4 = Categories(name="Acoustic")
 session.add(category4)
 session.commit()
 
-item1 = Items(name="Guitar", description="Paulo Coelho.",
-                     category=category4)
-
+item1 = Items(name="Guitar", description="Paulo Coelho.", category=category4)
 session.add(item1)
 session.commit()
 
 
-item2 = Items(name="Keyboard", description="Preeti Shenoy.",
-                     category=category4)
-
+item2 = Items(name="Keyboard", description="Preeti Shenoy.", category=category4)  # noqa
 session.add(item2)
 session.commit()
 
-item3 = Items(name="Flute", description="Sheryl Sandberg.",
-                     category=category4)
+item3 = Items(name="Flute", description="Sheryl Sandberg.", category=category4)
 session.add(item3)
 session.commit()
 
-item4 = Items(name="Violin", description="Jhumpa Lehri.",
-                     category=category4)
+item4 = Items(name="Violin", description="Jhumpa Lehri.", category=category4)
 session.add(item4)
 session.commit()
 
-item5 = Items(name="Trumpet", description="Rashmi Bansal.",
-                     category=category4)
+item5 = Items(name="Trumpet", description="Rashmi Bansal.", category=category4)
 session.add(item5)
 session.commit()
 

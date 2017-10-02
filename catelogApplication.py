@@ -20,8 +20,7 @@ import requests
 
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web'
-        ]['client_id']
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']  # noqa
 APPLICATION_NAME = 'Item catelog'
 
 engine = create_engine('sqlite:///itemCatelog.db')
@@ -37,8 +36,7 @@ session = DBSession()
 def showLogin():
     if 'username' in login_session:
         return redirect('/')
-    state = ''.join(random.choice(string.ascii_uppercase
-                    + string.digits) for x in xrange(32))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))  # noqa
     login_session['state'] = state
 
     # return "The current session state is %s" % login_session['state']
@@ -52,8 +50,7 @@ def gconnect():
     # Validate state token
 
     if request.args.get('state') != login_session['state']:
-        response = make_response(json.dumps('Invalid state parameter.'
-                                 ), 401)
+        response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -65,14 +62,11 @@ def gconnect():
 
         # Upgrade the authorization code into a credentials object
 
-        oauth_flow = flow_from_clientsecrets('client_secrets.json',
-                scope='')
+        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
-        response = \
-            make_response(json.dumps('Failed to upgrade the authorization code.'
-                          ), 401)
+        response = make_response(json.dumps('Failed to upgrade the authorization code.'), 401)  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -96,18 +90,14 @@ def gconnect():
 
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
-        response = \
-            make_response(json.dumps("Token's user ID doesn't match given user ID."
-                          ), 401)
+        response = make_response(json.dumps("Token's user ID doesn't match given user ID."), 401)  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Verify that the access token is valid for this app.
 
     if result['issued_to'] != CLIENT_ID:
-        response = \
-            make_response(json.dumps("Token's client ID does not match app's."
-                          ), 401)
+        response = make_response(json.dumps("Token's client ID does not match app's."), 401)  # noqa
         print "Token's client ID does not match app's."
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -115,9 +105,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = \
-            make_response(json.dumps('Current user is already connected.'
-                          ), 200)
+        response = make_response(json.dumps('Current user is already connected.'), 200)  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -142,10 +130,6 @@ def gconnect():
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += \
-        ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     print 'done!'
     return output
 
@@ -155,9 +139,7 @@ def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
-        response = \
-            make_response(json.dumps('Current user not connected.'),
-                          401)
+        response = make_response(json.dumps('Current user not connected.'), 401)  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
     print ('In gdisconnect access token is %s', access_token)
@@ -175,15 +157,11 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        response = make_response(json.dumps('Successfully disconnected.'
-                                 ), 200)
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return redirect('/')
     else:
-
-        response = \
-            make_response(json.dumps('Failed to revoke token for given user.'
-                          , 400))
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))   # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -191,8 +169,7 @@ def gdisconnect():
 @app.route('/categories/<int:category_id>/item/JSON')
 def itemCatelogJSON(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
-    items = \
-        session.query(Items).filter_by(category_id=category_id).all()
+    items = session.query(Items).filter_by(category_id=category_id).all()
     return jsonify(Items=[i.serialize for i in items])
 
 
@@ -215,29 +192,23 @@ def showCategories():
     return render_template('categories.html', categories=categories)
 
 
-# @app.route('/categories/<int:category_id>/')
-# @app.route('/categories/<int:category_id>/item')
-# def showItem(category_id):
-    # category = session.query(Categories).filter_by(id=category_id).one()
-    # items = session.query(Items).filter_by(category_id=category_id).all()
-    # return render_template('showitem.html', category=category, items=items, category_id=category_id)
-
 @app.route('/categories/<int:category_id>/')
 @app.route('/categories/<int:category_id>/item')
 def itemCatelog(category_id):
+    category = session.query(Categories).filter_by(id=category_id).one()
+    items = session.query(Items).filter_by(category_id=category_id).all()
     if 'username' in login_session:
         flash('Hi %s !' % login_session['username'])
-    category = session.query(Categories).filter_by(id=category_id).one()
-    items = \
-        session.query(Items).filter_by(category_id=category_id).all()
-    return render_template('item.html', category=category, items=items,
-                           category_id=category_id)
-
+        return render_template('item.html', category=category,
+                               items=items, category_id=category_id)
+    else:
+        return render_template('showitem.html', category=category,
+                               items=items, category_id=category_id)
 
 # Task 1: Create route for newItem function here
 
-@app.route('/categories/<int:category_id>/new/', methods=['GET', 'POST'
-           ])
+
+@app.route('/categories/<int:category_id>/new/', methods=['GET', 'POST'])
 def newItem(category_id):
     if 'username' not in login_session:
         return redirect('/login')
@@ -257,7 +228,8 @@ def newItem(category_id):
 
 # Task 2: Create route for editItem function here
 
-@app.route('/categories/<int:category_id>/item/<int:item_id>/edit/', methods=['GET', 'POST'])
+@app.route('/categories/<int:category_id>/item/<int:item_id>/edit/',
+           methods=['GET', 'POST'])
 def editItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
@@ -301,5 +273,3 @@ if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
-
-            

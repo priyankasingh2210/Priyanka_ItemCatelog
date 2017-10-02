@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import os
 import sys
@@ -9,10 +9,10 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+
 class Categories(Base):
     __tablename__ = "categories"
-    ##columns##
-    id = Column(Integer,primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
 
     @property
@@ -20,13 +20,13 @@ class Categories(Base):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'name': self.name, 
-        }
+            'name': self.name,
+            }
+
 
 class Items(Base):
     __tablename__ = "items"
-    ##columns##
-    id = Column(Integer,primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     description = Column(String(2500), nullable=False)
     category_id = Column(Integer, ForeignKey('categories.id'))
@@ -34,17 +34,13 @@ class Items(Base):
 
     @property
     def serialize(self):
-        # Returns object data in easily serializable format
-        return{
-            'id' : self.id,
-            'name' : self.name,
-            'description' : self.description,
-        }
-            
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            }  
 
-    
-
-###insert at the end of file###
+# insert at the end of file
 
 engine = create_engine('sqlite:///itemCatelog.db')
 
