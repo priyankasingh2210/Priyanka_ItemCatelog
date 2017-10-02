@@ -29,6 +29,31 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+
+def createUser():
+    name = login_session['name']
+    email = login_session['email']
+    url = login_session['img']
+    provider = login_session['provider']
+    newUser = User(name=name, email=email, image=url, provider=provider)
+    session.add(newUser)
+    session.commit()
+
+# validating current loggedin user
+
+def check_user():
+    email = login_session['email']
+    return session.query(User).filter_by(email=email).one_or_none()
+
+
+# retreive admin user details
+
+def check_admin():
+    return session.query(User).filter_by(
+        email='sagar.choudhary96@gmail.com').one_or_none()
+
+
+
 # Create anti-forgery state token
 
 @app.route('/login')
