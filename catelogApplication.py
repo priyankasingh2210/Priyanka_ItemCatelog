@@ -38,53 +38,42 @@ def createUser():
     session.add(newUser)
     session.commit()
 
-# validating current loggedin user
 
+# validating current loggedin user
 def check_user():
     email = login_session['email']
     return session.query(User).filter_by(email=email).one_or_none()
 
 
 # retreive admin user details
-
 def check_admin():
     return session.query(User).filter_by(
         email='priyankasingh.ps.90@gmail.com').one_or_none()
 
 
-
 # Create anti-forgery state token
-
 @app.route('/login')
 def showLogin():
     if 'username' in login_session:
         return redirect('/')
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))  # noqa
     login_session['state'] = state
-
     # return "The current session state is %s" % login_session['state']
-
     return render_template('loginpage.html', STATE=state)
 
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-
     # Validate state token
-
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Obtain authorization code
-
     code = request.data
-
     try:
-
         # Upgrade the authorization code into a credentials object
-
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
@@ -92,9 +81,7 @@ def gconnect():
         response = make_response(json.dumps('Failed to upgrade the authorization code.'), 401)  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
-
     # Check that the access token is valid.
-
     access_token = credentials.access_token
     url = \
         'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' \
@@ -103,14 +90,12 @@ def gconnect():
     result = json.loads(h.request(url, 'GET')[1])
 
     # If there was an error in the access token info, abort.
-
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Verify that the access token is used for the intended user.
-
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
         response = make_response(json.dumps("Token's user ID doesn't match given user ID."), 401)  # noqa
@@ -118,7 +103,6 @@ def gconnect():
         return response
 
     # Verify that the access token is valid for this app.
-
     if result['issued_to'] != CLIENT_ID:
         response = make_response(json.dumps("Token's client ID does not match app's."), 401)  # noqa
         print("Token's client ID does not match app's.")
@@ -133,12 +117,10 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get user info
-
     userinfo_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
@@ -160,13 +142,10 @@ def gconnect():
     return output
 
 
-
 # logout user
 @app.route('/logout', methods=['post'])
 def logout():
-
     # Disconnect based on provider
-
     if login_session.get('provider') == 'google':
         return gdisconnect()
     else:
@@ -215,7 +194,6 @@ def itemCatelogJSON(category_id):
 
 
 # ADD JSON ENDPOINT HERE
-
 @app.route('/categories/<int:category_id>/item/JSON')
 def itemJSON(category_id, item_id):
     item = session.query(Items).filter_by(id=menu_id).one()
@@ -223,7 +201,6 @@ def itemJSON(category_id, item_id):
 
 
 # Show all categories
-
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
@@ -246,9 +223,8 @@ def itemCatelog(category_id):
         return render_template('showitem.html', category=category,
                                items=items, category_id=category_id)
 
+
 # Task 1: Create route for newItem function here
-
-
 @app.route('/categories/<int:category_id>/new/', methods=['GET', 'POST'])
 def newItem(category_id):
     if 'username' not in login_session:
@@ -268,7 +244,6 @@ def newItem(category_id):
 
 
 # Task 2: Create route for editItem function here
-
 @app.route('/categories/<int:category_id>/item/<int:item_id>/edit/',
            methods=['GET', 'POST'])
 def editItem(category_id, item_id):
@@ -281,7 +256,7 @@ def editItem(category_id, item_id):
     if check_admin():
         admin_id = check_admin().id
     else:
-        admin_id = -1;
+        admin_id = -1
     if editItem:
         if user_id == editItem.user_id or user_id == admin_id:
             if request.method == 'POST':
@@ -291,19 +266,14 @@ def editItem(category_id, item_id):
                     editItem.description = request.form['description']
                 session.add(editItem)
                 session.commit()
-                return redirect(url_for('itemCatelog', category_id=category_id))
+                return redirect(url_for('itemCatelog', category_id=category_id))  # noqa
             else:
                 if user_id == editItem.user_id or user_id == admin_id:
-                    return render_template('editItem.html',
-                                       category_id=category_id,
-                                       item_id=item_id, item=editItem)
+                    return render_template('editItem.html', category_id=category_id, item_id=item_id, item=editItem)  # noqa
     return redirect('/')
-        
-
 
 
 # Task 3: Create a route for deleteItem function here
-
 @app.route('/categories/<int:category_id>/<int:item_id>/delete/',
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
@@ -311,22 +281,22 @@ def deleteItem(category_id, item_id):
         return redirect('/login')
     else:
         flash('Hi %s !' % login_session['username'])
-    
     user_id = check_user().id
     if check_admin():
         admin_id = check_admin().id
     else:
-        admin_id = -1;
-    deleteItem = session.query(Items).filter_by(id=item_id).one_or_none() 
-    if deleteItem :
+        admin_id = -1
+    deleteItem = session.query(Items).filter_by(id=item_id).one_or_none()
+    if deleteItem:
         if user_id == deleteItem.user_id or user_id == admin_id:
             if request.method == 'POST':
-                category = session.query(Categories).filter_by(id=category_id).one()
+                category = session.query(Categories)
+                .filter_by(id=category_id).one()
                 session.delete(deleteItem)
                 session.commit()
-                return redirect(url_for('itemCatelog', category_id=category_id))
+                return redirect(url_for('itemCatelog', category_id=category_id))  # noqa
             else:
-                return render_template('deleteItem.html', item=deleteItem)
+                return render_template('deleteItem.html', item=deleteItem)  # noqa
     return redirect('/')
 
 

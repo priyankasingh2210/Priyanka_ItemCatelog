@@ -104,7 +104,7 @@ category4 = Categories(name="Acoustic")
 session.add(category4)
 session.commit()
 
-item1 = Items(name="Guitar", description="Paulo Coelho.", category=category4, user=user1) # noqa
+item1 = Items(name="Guitar", description="Paulo Coelho.", category=category4, user=user1)  # noqa
 session.add(item1)
 session.commit()
 

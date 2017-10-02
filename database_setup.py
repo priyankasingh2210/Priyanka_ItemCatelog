@@ -32,7 +32,6 @@ class User(Base):
     image = Column(String(250), nullable=True)
     provider = Column(String(250), nullable=True)
 
-    
     @property
     def serialize(self):
         return {
@@ -49,7 +48,7 @@ class Items(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     description = Column(String(2500), nullable=False)
-    category_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'))
+    category_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'))  # noqa
     category = relationship(Categories)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
