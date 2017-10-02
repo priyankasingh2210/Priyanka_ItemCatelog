@@ -24,6 +24,19 @@ class Categories(Base):
             }
 
 
+class User(Base):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            }
+
+
 class Items(Base):
     __tablename__ = "items"
     id = Column(Integer, primary_key=True)
@@ -31,6 +44,8 @@ class Items(Base):
     description = Column(String(2500), nullable=False)
     category_id = Column(Integer, ForeignKey('categories.id'))
     category = relationship(Categories)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -38,7 +53,7 @@ class Items(Base):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            }  
+            }
 
 # insert at the end of file
 
